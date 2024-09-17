@@ -1,4 +1,6 @@
-﻿namespace sortQuick {
+﻿using System.Runtime.InteropServices.Marshalling;
+
+namespace sortQuick {
 
     class quickSort {
         //setup array
@@ -90,6 +92,30 @@
                 }
             }
             Console.WriteLine("There are " + j + " numbers with " + biggestDigits + " digits in the list.");
+
+            //read from file testing
+            String line;
+            List<int> lineNum = new List<int>();
+            try{
+                StreamReader sr = new StreamReader("Numbers.txt");
+                line = sr.ReadToEnd()!;
+                line.Replace("\r\n", " ");
+
+                string[] strArray = line.Split(new char[] {'\r', '\n', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string str in strArray) {
+                    int temp = 0;
+                    temp = Int32.Parse(str);
+
+                    lineNum.Add(temp);
+                    //Console.WriteLine(temp);
+                }
+                sr.Close();
+            }
+            catch (FormatException) {
+                Console.WriteLine("Unable to parse text file");
+            }
+
+            Console.WriteLine(String.Join(" ", lineNum));
         }
     }
 }
