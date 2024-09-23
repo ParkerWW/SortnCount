@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices.Marshalling;
 
-namespace sortQuick {
+namespace CountNSort {
 
     class quickSort {
         //setup array
@@ -8,7 +8,7 @@ namespace sortQuick {
         private int len;
 
         public void QuickSort(){
-            sort(0, len-1);
+            sort(0, len);
         }
 
         public void sort(int left, int right) {
@@ -59,29 +59,17 @@ namespace sortQuick {
             }
         }
 
-        //find number of digits in a number
         public static int numDigits(quickSort qSort, int i) {
+            //find number of digits in a number
             return Convert.ToInt32(Math.Floor(Math.Log10(qSort.array[i]) + 1));
         }
 
-        public static void Main() {
-            quickSort qSort = new quickSort();
-
-            //setup array and start sort
-            int[] array = {47, 5, 12, 146, 2, 120, 80, 16, 34, 60};
-            qSort.array = array;
-            qSort.len = qSort.array.Length;
-            qSort.QuickSort();
-            int j = 0, biggestDigits = numDigits(qSort, qSort.len - 1);
-
-            //print the array
-            /*for (int i = 0; j < qSort.len; i++) {
-                Console.WriteLine(qSort.array[i]);
-            }*/
-            Console.WriteLine("Numbers: " + string.Join(" ", qSort.array));
-
+        public static void bigDig(quickSort qSort) {
             //count biggest digit numbers in the array from the top of the sorted numbers
-            for(int i = qSort.len - 1; i > -1; i--) {
+            int j = 0, biggestDigits = numDigits(qSort, qSort.len);
+
+
+            for(int i = qSort.len; i > -1; i--) {
                 int digits = numDigits(qSort, i);
 
                 if(digits < biggestDigits) {
@@ -91,23 +79,30 @@ namespace sortQuick {
                     j++;
                 }
             }
-            Console.WriteLine("There are " + j + " numbers with " + biggestDigits + " digits in the list.");
 
-            //read from file testing
+            //print amout of biggest digits
+            Console.WriteLine("There are " + j + " numbers with " + biggestDigits + " digits in the list.");
+        }
+
+        public static void Main() {
+            quickSort qSort = new quickSort();
+
+            //read from file
             String line;
             List<int> lineNum = new List<int>();
             try{
+                //put file content into string and replace potential seperators
                 StreamReader sr = new StreamReader("Numbers.txt");
                 line = sr.ReadToEnd()!;
-                line.Replace("\r\n", " ");
+                line = line.Replace(",", " ").Replace("\r\n", " ").Replace(";", " ").Replace(":", " ");
 
-                string[] strArray = line.Split(new char[] {'\r', '\n', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                //make the list into a array of strings and convert to int list and clost file
+                string[] strArray = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 foreach (string str in strArray) {
                     int temp = 0;
                     temp = Int32.Parse(str);
 
                     lineNum.Add(temp);
-                    //Console.WriteLine(temp);
                 }
                 sr.Close();
             }
@@ -115,7 +110,17 @@ namespace sortQuick {
                 Console.WriteLine("Unable to parse text file");
             }
 
-            Console.WriteLine(String.Join(" ", lineNum));
+            //print unsorted, put list of numbers into an array and sort, print again
+            Console.WriteLine("Unsorted Numbers: " + String.Join(" ", lineNum));
+
+            qSort.array = lineNum.ToArray();
+            qSort.len = qSort.array.Length - 1;
+            qSort.QuickSort();
+
+            Console.WriteLine("Sorted Numbers: " + string.Join(" ", qSort.array));
+
+            //Count biggest digits and print
+            bigDig(qSort);
         }
     }
 }
