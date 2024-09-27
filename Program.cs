@@ -1,8 +1,9 @@
-﻿using System.Runtime.InteropServices.Marshalling;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace CountNSort {
 
-    class quickSort {
+    class CountNSort {
         //setup array
         private int[] array = new int[10];
         private int len;
@@ -59,21 +60,21 @@ namespace CountNSort {
             }
         }
 
-        public static int numDigits(quickSort qSort, int i) {
+        public static int numDigits(CountNSort qSort, int i) {
             //find number of digits in a number
             return Convert.ToInt32(Math.Floor(Math.Log10(qSort.array[i]) + 1));
         }
 
-        public static void bigDig(quickSort qSort) {
+        public static void bigDig(CountNSort qSort) {
             //count biggest digit numbers in the array from the top of the sorted numbers
             int j = 0, biggestDigits = numDigits(qSort, qSort.len);
 
 
-            for(int i = qSort.len; i > -1; i--) {
+            for(int i = qSort.len; i > 0; i--) {
                 int digits = numDigits(qSort, i);
-
+                
                 if(digits < biggestDigits) {
-                    i = 0;
+                    i = -1;
                 }
                 else {
                     j++;
@@ -84,12 +85,9 @@ namespace CountNSort {
             Console.WriteLine("There are " + j + " numbers with " + biggestDigits + " digits in the list.");
         }
 
-        public static void Main() {
-            quickSort qSort = new quickSort();
-
+        public static List<int> getFile(List<int> lineNum ) {
             //read from file
             String line;
-            List<int> lineNum = new List<int>();
             try{
                 //put file content into string and replace potential seperators
                 StreamReader sr = new StreamReader("Numbers.txt");
@@ -107,12 +105,21 @@ namespace CountNSort {
                 sr.Close();
             }
             catch (FormatException) {
-                Console.WriteLine("Unable to parse text file");
+                Console.WriteLine("Unable to parse the text file");
             }
+
+            return lineNum;
+        }
+
+        public static void Main() {
+            //create list of numbers from file
+            List<int> lineNum = new List<int>();
+            lineNum = getFile(lineNum);
 
             //print unsorted, put list of numbers into an array and sort, print again
             Console.WriteLine("Unsorted Numbers: " + String.Join(" ", lineNum));
 
+            CountNSort qSort = new CountNSort();
             qSort.array = lineNum.ToArray();
             qSort.len = qSort.array.Length - 1;
             qSort.QuickSort();
