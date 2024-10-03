@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.Marshalling;
+using System.Text.RegularExpressions;
 
 namespace CountNSort {
 
@@ -85,17 +86,17 @@ namespace CountNSort {
             Console.WriteLine("There are " + j + " numbers with " + biggestDigits + " digits in the list.");
         }
 
-        public static List<int> getFile(List<int> lineNum ) {
+        public static List<int> getFile(List<int> lineNum) {
             //read from file
             String line;
             try{
                 //put file content into string and replace potential seperators
                 StreamReader sr = new StreamReader("Numbers.txt");
                 line = sr.ReadToEnd()!;
-                line = line.Replace(",", " ").Replace("\r\n", " ").Replace(";", " ").Replace(":", " ");
+                line = Regex.Replace(line, @"\D", " ");
 
                 //make the list into a array of strings and convert to int list and clost file
-                string[] strArray = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                string[] strArray = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string str in strArray) {
                     int temp = 0;
                     temp = Int32.Parse(str);
@@ -123,7 +124,7 @@ namespace CountNSort {
             qSort.array = lineNum.ToArray();
             qSort.len = qSort.array.Length - 1;
             qSort.QuickSort();
-
+            
             Console.WriteLine("Sorted Numbers: " + string.Join(" ", qSort.array));
 
             //Count biggest digits and print
