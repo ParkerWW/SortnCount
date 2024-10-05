@@ -1,63 +1,63 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.Marshalling;
+﻿//using System.Runtime.CompilerServices;
+//using System.Runtime.InteropServices.Marshalling;
 using System.Text.RegularExpressions;
 
 namespace CountNSort {
 
     class CountNSort {
         //setup array
-        private int[] array = new int[10];
+        private int[] array = new int[1];
         private int len;
 
         public void QuickSort(){
             sort(0, len);
         }
 
-        public void sort(int left, int right) {
-            int leftEnd, rightEnd, pivot;
+        public void sort(int l, int r) {
+            int lEnd, rEnd, pivot;
 
             //save original values and set pivot
-            leftEnd = left;
-            rightEnd = right;
-            pivot = array[left];
+            lEnd = l;
+            rEnd = r;
+            pivot = array[l];
 
-            while(left < right) {
+            while(l < r) {
                 //move upperbound down if it hasn't hit the pivot partition
-                while((array[right] >= pivot) && (left < right)) {
-                    right--;
+                while((array[r] >= pivot) && (l < r)) {
+                    r--;
                 }
 
                 //move lowerbound up if the pass isnt completed
-                if(left != right) {
-                    array[left] = array[right];
-                    left++;
+                if(l != r) {
+                    array[l] = array[r];
+                    l++;
                 }
 
                 //move lowerbound up if it hasn't hit the pivot partition
-                while((array[left] <= pivot) && (left < right)) {
-                    left++;
+                while((array[l] <= pivot) && (l < r)) {
+                    l++;
                 }
 
                 //move upperbound down if the pass isnt completed
-                if(left != right) {
-                    array[right] = array[left];
-                    right--;
+                if(l != r) {
+                    array[r] = array[l];
+                    r--;
                 }
             }
 
             //move partition and bounds
-            array[left] = pivot;
-            pivot = left;
-            left = leftEnd;
-            right = rightEnd;
+            array[l] = pivot;
+            pivot = l;
+            l = lEnd;
+            r = rEnd;
 
             //continue if the pass hasn't completed
-            if(left < pivot) {
-                sort(left, pivot - 1);
+            if(l < pivot) {
+                sort(l, pivot - 1);
             }
 
-            if(right > pivot) {
-                sort(pivot+1, right);
+            if(r > pivot) {
+                sort(pivot + 1, r);
             }
         }
 
@@ -70,7 +70,7 @@ namespace CountNSort {
             //count biggest digit numbers in the array from the top of the sorted numbers
             int j = 0, biggestDigits = numDigits(qSort, qSort.len);
 
-
+            //count backwards in array till there's less digits
             for(int i = qSort.len; i > 0; i--) {
                 int digits = numDigits(qSort, i);
                 
